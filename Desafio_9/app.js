@@ -54,7 +54,7 @@ function iniciarCarrito(){
 
     function agregarProductos(ptr){
         const productosCart = JSON.parse(localStorage.getItem('carrito'))
-       ptr=(ptr>0) ? ptr-- : ptr = 0
+     //  ptr=(ptr>0) ? ptr-- : ptr = 0
             
             //let ptr=e.target.value-1
             let index = productosCart.findIndex(producto => producto.id == ptr );
@@ -65,7 +65,8 @@ function iniciarCarrito(){
             if(index != -1 ){
                
                if(productosCart[index].cantidad < productos[index].stock){
-                   console.log("Entro mismo producto")
+                   console.log(productosCart[index].cantidad,productos[index].stock)
+
                     productosCart[index].cantidad++
                     localStorage.setItem('carrito', JSON.stringify(productosCart))
                     const pcantidad=document.getElementById(`cant-producto${ptr}`)
@@ -74,9 +75,11 @@ function iniciarCarrito(){
              
             } 
             else {
-                
-                let vipd ={id:ptr,nombre:productos[ptr].nombre,marca:productos[ptr].marca,precio:productos[ptr].precio,
-                           stock:productos[ptr].stock,imagen:productos[ptr].imagen,cantidad:1 }           
+
+                const nodo =productos.find(producto => producto.id == ptr)
+                const {id,nombre,marca,precio,stock} = nodo
+                let vipd ={id:id,nombre:nombre,marca:marca,precio:precio,
+                           stock:stock,cantidad:1 }           
                 console.log(vipd.nombre)
                 productosCart.push(vipd)
                 localStorage.setItem('carrito',JSON.stringify(productosCart))
