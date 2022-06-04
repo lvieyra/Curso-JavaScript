@@ -52,7 +52,7 @@ function iniciarCarrito(){
     function agregarProductos(ptr)
     {
         document.querySelectorAll('.agregar-producto').forEach(nodo => {nodo.addEventListener('click', (e) => {
-           
+          
             const productosCart = JSON.parse(localStorage.getItem('carrito'))
             ptr=e.target.value-1
             //let ptr=e.target.value-1
@@ -95,8 +95,8 @@ function iniciarCarrito(){
 /*Mostrar carga Productos */
 function mostrarModalBody(item){
     const {id,nombre,marca,precio,stock,imagen,cantidad} = item 
-   // const {cantidad,id} = item 
-    return modalBody.innerHTML += `
+   //const {cantidad,id} = item 
+     modalBody.innerHTML += `
     <div id ="card${id}" class="card mb-3" style="max-width: 540px;">
         <div class="row g-0">
           <div class="col-md-4">
@@ -111,12 +111,19 @@ function mostrarModalBody(item){
                  <p class="card-text">Stock: ${stock}</p>
                  <p class="card-text">Cantidad: ${cantidad}</p>
                  <button value="${id}" data-id="btn-${id}" class="btn btn-outline-dark eliminar-producto">Eliminar</button>
-                 <button dataId=${id} class="btn btn-outline-dark agregar-producto">Agregar</button>
+                 <button dataId=${id} value="${id}" class="btn btn-outline-dark agregarModalProducto">Agregar</button>
                </div>
              </div>
        </div>
     </div>
 `
+document.querySelectorAll('.agregarModalProducto').forEach(btn => {
+//console.log(btn)
+ btn.addEventListener('click',(e) => {
+     console.log(e.target.value)
+   //  agregarProductos()
+ })
+})
 }
 /*Carga carrito*/
 btnCarrito.addEventListener('click', () => { 
@@ -130,6 +137,7 @@ btnCarrito.addEventListener('click', () => {
             console.log(item.precio + "mostrar carrito " ) 
             compraTotal += item.precio * item.cantidad
             mostrarModalBody(item)
+           
             
         })
        
