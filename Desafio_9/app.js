@@ -18,7 +18,7 @@ const DatosJson = async () => {
     productos.forEach((producto) => {
         divProductos.innerHTML += producto.mostrarInformacion()
     });
-    //let parm=-2
+    
     document.querySelectorAll('.agregar-producto').forEach(nodo => {nodo.addEventListener('click', (e) => {
           
         agregarProductos(e.target.value)
@@ -51,61 +51,72 @@ function iniciarCarrito(){
     }
  }
 
-
-    function agregarProductos(ptr){
-        const productosCart = JSON.parse(localStorage.getItem('carrito'))
-     //  ptr=(ptr>0) ? ptr-- : ptr = 0
+function agregarProductos(ptr){
+const productosCart = JSON.parse(localStorage.getItem('carrito'))
+     
+    let index = productosCart.findIndex(producto => producto.id == ptr );
+    console.log(index)
             
-            //let ptr=e.target.value-1
-            let index = productosCart.findIndex(producto => producto.id == ptr );
-            console.log(index)
+    console.log(ptr +"ptr")
             
-            console.log(ptr +"ptr")
-            
-            if(index != -1 ){
+    if(index != -1 ){
                
-               if(productosCart[index].cantidad < productos[index].stock){
-                   console.log(productosCart[index].cantidad,productos[index].stock)
+        if(productosCart[index].cantidad < productos[index].stock){
+            console.log(productosCart[index].cantidad,productos[index].stock)
 
-                    productosCart[index].cantidad++
-                    localStorage.setItem('carrito', JSON.stringify(productosCart))
-                    const pcantidad=document.getElementById(`cant-producto${ptr}`)
-                    if(pcantidad){
-                        actualizarCantidadCarrito(pcantidad,productosCart[index].cantidad)
-                    }
-                    
-                }
-             
-            } 
-            else {
-
-                const nodo =productos.find(producto => producto.id == ptr)
-                console.log(nodo)
-                const {id,nombre,marca,precio,stock,imagen} = nodo
-                let vipd ={id:id,nombre:nombre,marca:marca,precio:precio,
-                           stock:stock,imagen:imagen,cantidad:1 } 
-                
-                console.log(vipd.nombre)
-                productosCart.push(vipd)
-                localStorage.setItem('carrito',JSON.stringify(productosCart))
-                console.log(`Producto localStorage ${productosCart.length}`)
-                console.log( JSON.parse(localStorage.getItem('carrito')));
-                
+             productosCart[index].cantidad++
+            localStorage.setItem('carrito', JSON.stringify(productosCart))
+            const pcantidad=document.getElementById(`cant-producto${ptr}`)
+            if(pcantidad){
+                actualizarCantidadCarrito(pcantidad,productosCart[index].cantidad)
             }
-            mostrarCantidadProductos(productosCart)
+                    
+        }
+             
+    } 
+    else {
+
+        const nodo =productos.find(producto => producto.id == ptr)
+        console.log(nodo)
+        const {id,nombre,marca,precio,stock,imagen} = nodo
+        let vipd ={id:id,nombre:nombre,marca:marca,precio:precio,
+                    stock:stock,imagen:imagen,cantidad:1 } 
+                
+        console.log(vipd.nombre)
+        productosCart.push(vipd)
+        localStorage.setItem('carrito',JSON.stringify(productosCart))
+        console.log(`Producto localStorage ${productosCart.length}`)
+        console.log( JSON.parse(localStorage.getItem('carrito')));
+                
     }
+    mostrarCantidadProductos(productosCart) }
     
-      function actualizarCantidadCarrito(pcantidad,cantidad){
-         pcantidad.innerText =`Cantidad: ${cantidad}`
+function actualizarCantidadCarrito(pcantidad,cantidad){
+    pcantidad.innerText =`Cantidad: ${cantidad}`
+calcularMonto()
+} 
 
-      } 
-
-    
+function calcularMonto(){
+    productosCarrito = JSON.parse(localStorage.getItem('carrito'));
+    modalBody.innerHTML = ""
+    let compraTotal = 0
+    if (productosCarrito.length > 0)
+     {
+        productosCarrito.forEach(item => {
+           // const producto = productos.find(nodo => nodo.id == item.id)
+            console.log(item.precio + "mostrar carrito " ) 
+            compraTotal += item.precio * item.cantidad
+            mostrarModalBody(item)
+           
+            
+        })
        
-          
+       document.getElementById('precioFinal').innerHTML = `Precio total $${compraTotal}`
+    }else{
+        modalBody.innerHTML += `<p>No hay productos en el carrito</p>`
+    }
 
- 
-    
+}    
 
 /*Mostrar carga Productos */
 function mostrarModalBody(item){
@@ -133,7 +144,6 @@ function mostrarModalBody(item){
     </div>
 `
 document.querySelectorAll('.agregarModalProducto').forEach(btn => {
-//console.log(btn)
  btn.addEventListener('click',(e) => {
      console.log(e.target.value)
      agregarProductos(e.target.value)
@@ -142,32 +152,35 @@ document.querySelectorAll('.agregarModalProducto').forEach(btn => {
 }
 /*Carga carrito*/
 btnCarrito.addEventListener('click', () => { 
-    productosCarrito = JSON.parse(localStorage.getItem('carrito'));
-    modalBody.innerHTML = ""
-    let compraTotal = 0
-    if (productosCarrito.length > 0)
-     {
-        productosCarrito.forEach(item => {
-           // const producto = productos.find(nodo => nodo.id == item.id)
-            console.log(item.precio + "mostrar carrito " ) 
-            compraTotal += item.precio * item.cantidad
-            mostrarModalBody(item)
-           
-            
-        })
-       
-       document.getElementById('precioFinal').innerHTML = `Precio total $${compraTotal}`
-    }else{
-        modalBody.innerHTML += `<p>No hay productos en el carrito</p>`
-    }
-
+    calcularMonto()
+   
    // eliminarCarrito(compraTotal)
 
 })
 
-    //let btnAdd = document.getElementById('dataId')
-document.querySelectorAll('.card').forEach(nodo => {nodo.addEventListener('click', (e) => {
-    console.log(e.target.value)
-agregarProductos(e.target.value)
-})})
+document.getElementById('finalizarCompra').addEventListener('click', (e) => {
+    Swal.fire({
+        icon: 'question',
+        title: '¿Desea confirmar su compra?',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6'
+      }).then((result)=>{
+          if(result.isConfirmed){
+            Swal.fire({
+                icon: 'success',
+                title: 'Compra Finalizada',
+                text: 'En breve recibira su pedido'
+            })
+          }
+      })
+      productosCarrito=[]
+      localStorage.removeItem('carrito');
+      iniciarCarrito()
+    
+      const modal = bootstrap.Modal.getInstance(document.querySelector('#modalCarrito'));
+
+      modal.hide()
+      document.getElementById('precioFinal').innerHTML = `Precio total $0`
+      mostrarCantidadProductos(productosCarrito)
+   })
 
