@@ -70,16 +70,21 @@ function iniciarCarrito(){
                     productosCart[index].cantidad++
                     localStorage.setItem('carrito', JSON.stringify(productosCart))
                     const pcantidad=document.getElementById(`cant-producto${ptr}`)
-                    actualizarCantidadCarrito(pcantidad,productosCart[index].cantidad)
+                    if(pcantidad){
+                        actualizarCantidadCarrito(pcantidad,productosCart[index].cantidad)
+                    }
+                    
                 }
              
             } 
             else {
 
                 const nodo =productos.find(producto => producto.id == ptr)
-                const {id,nombre,marca,precio,stock} = nodo
+                console.log(nodo)
+                const {id,nombre,marca,precio,stock,imagen} = nodo
                 let vipd ={id:id,nombre:nombre,marca:marca,precio:precio,
-                           stock:stock,cantidad:1 }           
+                           stock:stock,imagen:imagen,cantidad:1 } 
+                
                 console.log(vipd.nombre)
                 productosCart.push(vipd)
                 localStorage.setItem('carrito',JSON.stringify(productosCart))
