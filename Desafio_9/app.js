@@ -18,9 +18,12 @@ const DatosJson = async () => {
     productos.forEach((producto) => {
         divProductos.innerHTML += producto.mostrarInformacion()
     });
-    let parm=-2
-    agregarProductos(parm)
-    
+    //let parm=-2
+    document.querySelectorAll('.agregar-producto').forEach(nodo => {nodo.addEventListener('click', (e) => {
+          
+        agregarProductos(e.target.value)
+        
+    })})
 }
 
 
@@ -49,12 +52,10 @@ function iniciarCarrito(){
  }
 
 
-    function agregarProductos(ptr)
-    {
-        document.querySelectorAll('.agregar-producto').forEach(nodo => {nodo.addEventListener('click', (e) => {
-          
-            const productosCart = JSON.parse(localStorage.getItem('carrito'))
-            ptr=e.target.value-1
+    function agregarProductos(ptr){
+        const productosCart = JSON.parse(localStorage.getItem('carrito'))
+       ptr=(ptr>0) ? ptr-- : ptr = 0
+            
             //let ptr=e.target.value-1
             let index = productosCart.findIndex(producto => producto.id == ptr );
             console.log(index)
@@ -67,6 +68,8 @@ function iniciarCarrito(){
                    console.log("Entro mismo producto")
                     productosCart[index].cantidad++
                     localStorage.setItem('carrito', JSON.stringify(productosCart))
+                    const pcantidad=document.getElementById(`cant-producto${ptr}`)
+                    actualizarCantidadCarrito(pcantidad,productosCart[index].cantidad)
                 }
              
             } 
@@ -82,10 +85,14 @@ function iniciarCarrito(){
                 
             }
             mostrarCantidadProductos(productosCart)
-            
-        })})
-  
     }
+    
+      function actualizarCantidadCarrito(pcantidad,cantidad){
+         pcantidad.innerText =`Cantidad: ${cantidad}`
+
+      } 
+
+    
        
           
 
@@ -109,7 +116,7 @@ function mostrarModalBody(item){
                  <p class="card-text">Marca: ${marca}</p>
                  <p class="card-text">Precio: $${precio}</p>
                  <p class="card-text">Stock: ${stock}</p>
-                 <p class="card-text">Cantidad: ${cantidad}</p>
+                 <p id="cant-producto${id}" class="card-text">Cantidad: ${cantidad}</p>
                  <button value="${id}" data-id="btn-${id}" class="btn btn-outline-dark eliminar-producto">Eliminar</button>
                  <button dataId=${id} value="${id}" class="btn btn-outline-dark agregarModalProducto">Agregar</button>
                </div>
@@ -121,7 +128,7 @@ document.querySelectorAll('.agregarModalProducto').forEach(btn => {
 //console.log(btn)
  btn.addEventListener('click',(e) => {
      console.log(e.target.value)
-   //  agregarProductos()
+     agregarProductos(e.target.value)
  })
 })
 }
