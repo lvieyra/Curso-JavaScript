@@ -89,8 +89,35 @@ const productosCart = JSON.parse(localStorage.getItem('carrito'))
         console.log( JSON.parse(localStorage.getItem('carrito')));
                 
     }
-    mostrarCantidadProductos(productosCart) }
-    
+    mostrarCantidadProductos(productosCart)
+ }
+
+ /*Eliminar Carrito*/
+function eliminarCarrito()
+{
+    //calcularMonto()
+    modalCarrito.addEventListener('click', (e) => {
+         let total=calcularMonto()
+         const productosCarrito = JSON.parse(localStorage.getItem('carrito'))
+         const btnId = e.target.getAttribute('data-id')
+         if(btnId !== null){
+             const btnValue = e.target.value
+             document.getElementById(`card${btnValue}`).remove()
+            // let productoCatalogo = productos.find(producto => producto.id == e.target.value );
+             let productoCarrito = productosCarrito.find(producto => producto.id == e.target.value );
+             total -=productoCarrito.precio * productoCarrito.cantidad
+             let indexCarrito = productosCarrito.findIndex(producto => producto.id == e.target.value )
+             productosCarrito.splice(indexCarrito,1)
+             localStorage.setItem('carrito',JSON.stringify(productosCarrito))
+             productosCarrito.forEach(producto => console.log(producto))
+             document.getElementById('precioFinal').innerHTML = `Precio total $${total}`
+             mostrarCantidadProductos(productosCarrito)
+         }
+       
+     })
+}
+ 
+
 function actualizarCantidadCarrito(pcantidad,cantidad){
     pcantidad.innerText =`Cantidad: ${cantidad}`
 calcularMonto()
@@ -115,7 +142,7 @@ function calcularMonto(){
     }else{
         modalBody.innerHTML += `<p>No hay productos en el carrito</p>`
     }
-
+   return compraTotal
 }    
 
 /*Mostrar carga Productos */
@@ -154,7 +181,7 @@ document.querySelectorAll('.agregarModalProducto').forEach(btn => {
 btnCarrito.addEventListener('click', () => { 
     calcularMonto()
    
-   // eliminarCarrito(compraTotal)
+    eliminarCarrito()
 
 })
 
