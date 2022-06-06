@@ -58,11 +58,15 @@ const productosCart = JSON.parse(localStorage.getItem('carrito'))
     console.log(index)
             
     console.log(ptr +"ptr")
+    const nodo =productos.find(producto => producto.id == ptr)
+        console.log(nodo)
+        const {id,nombre,marca,precio,stock,imagen} = nodo
             
     if(index != -1 ){
                
-        if(productosCart[index].cantidad < productos[index].stock){
-            console.log(productosCart[index].cantidad,productos[index].stock)
+        if(productosCart[index].cantidad < nodo.stock){
+            console.log(`CANTIDAD ARRAY STORAGE  ${productosCart[index].cantidad} `)
+            console.log(`STOCK ARRAY JSON  ${nodo.stock} `)
 
              productosCart[index].cantidad++
             localStorage.setItem('carrito', JSON.stringify(productosCart))
@@ -75,10 +79,11 @@ const productosCart = JSON.parse(localStorage.getItem('carrito'))
              
     } 
     else {
-
+       /*
         const nodo =productos.find(producto => producto.id == ptr)
         console.log(nodo)
         const {id,nombre,marca,precio,stock,imagen} = nodo
+        */
         let vipd ={id:id,nombre:nombre,marca:marca,precio:precio,
                     stock:stock,imagen:imagen,cantidad:1 } 
                 
@@ -204,6 +209,7 @@ function eliminarUnProducto(indice){
                productosDelStorage.splice(index,1)
                localStorage.setItem('carrito',JSON.stringify(productosDelStorage))
                calcularMonto()
+               mostrarCantidadProductos(productosDelStorage)
                if (productosDelStorage.length==0){
                 modalBody.innerHTML= ""
                }
