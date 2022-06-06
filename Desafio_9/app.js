@@ -95,7 +95,6 @@ const productosCart = JSON.parse(localStorage.getItem('carrito'))
  /*Eliminar Carrito*/
 function eliminarCarrito()
 {
-    //calcularMonto()
     modalCarrito.addEventListener('click', (e) => {
          let total=calcularMonto()
          const productosCarrito = JSON.parse(localStorage.getItem('carrito'))
@@ -103,7 +102,6 @@ function eliminarCarrito()
          if(btnId !== null){
              const btnValue = e.target.value
              document.getElementById(`card${btnValue}`).remove()
-            // let productoCatalogo = productos.find(producto => producto.id == e.target.value );
              let productoCarrito = productosCarrito.find(producto => producto.id == e.target.value );
              total -=productoCarrito.precio * productoCarrito.cantidad
              let indexCarrito = productosCarrito.findIndex(producto => producto.id == e.target.value )
@@ -129,9 +127,7 @@ function calcularMonto(){
     let compraTotal = 0
     if (productosCarrito.length > 0)
      {
-        productosCarrito.forEach(item => {
-           // const producto = productos.find(nodo => nodo.id == item.id)
-            console.log(item.precio + "mostrar carrito " ) 
+        productosCarrito.forEach(item => { 
             compraTotal += item.precio * item.cantidad
             mostrarModalBody(item)
            
@@ -164,20 +160,60 @@ function mostrarModalBody(item){
                  <p class="card-text">Stock: ${stock}</p>
                  <p id="cant-producto${id}" class="card-text">Cantidad: ${cantidad}</p>
                  <button value="${id}" data-id="btn-${id}" class="btn btn-outline-dark eliminar-producto">Eliminar</button>
+                 <button  value="${id}" class="btn btn-outline-dark eliminarUnProducto">Delete</button>
                  <button dataId=${id} value="${id}" class="btn btn-outline-dark agregarModalProducto">Agregar</button>
                </div>
              </div>
        </div>
     </div>
 `
+
 document.querySelectorAll('.agregarModalProducto').forEach(btn => {
  btn.addEventListener('click',(e) => {
      console.log(e.target.value)
      agregarProductos(e.target.value)
  })
 })
+
+//eliminarUnProducto()
+
+document.querySelectorAll('.eliminarUnProducto').forEach(btn =>{
+    btn.addEventListener('click', (e) => {
+         
+        eliminarUnProducto(e.target.value)
+        
+       
+    })
+})
+
 }
-/*Carga carrito*/
+
+function eliminarUnProducto(indice){
+    const productosDelStorage = JSON.parse(localStorage.getItem('carrito'))
+    let index = productosDelStorage.findIndex(producto => producto.id == indice );   
+            if(productosDelStorage[index].cantidad > 0) {
+                productosDelStorage[index].cantidad--
+                localStorage.setItem('carrito', JSON.stringify(productosDelStorage))
+                       calcularMonto()
+                
+            }   
+            
+            if(productosDelStorage[index].cantidad==0){
+               console.log(`Cantidad== ${productosDelStorage[index].cantidad}`)
+               document.getElementById(`card${indice}`).remove()
+               productosDelStorage.splice(index,1)
+               localStorage.setItem('carrito',JSON.stringify(productosDelStorage))
+               calcularMonto()
+               if (productosDelStorage.length==0){
+                modalBody.innerHTML= ""
+               }
+            }  
+            
+           
+           // calcularMonto()
+}
+
+/*Eliminar todo el producto*/
 btnCarrito.addEventListener('click', () => { 
     calcularMonto()
    
