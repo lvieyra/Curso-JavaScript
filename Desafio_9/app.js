@@ -79,11 +79,7 @@ const productosCart = JSON.parse(localStorage.getItem('carrito'))
              
     } 
     else {
-       /*
-        const nodo =productos.find(producto => producto.id == ptr)
-        console.log(nodo)
-        const {id,nombre,marca,precio,stock,imagen} = nodo
-        */
+       
         let vipd ={id:id,nombre:nombre,marca:marca,precio:precio,
                     stock:stock,imagen:imagen,cantidad:1 } 
                 
@@ -133,13 +129,14 @@ function calcularMonto(){
     if (productosCarrito.length > 0)
      {
         productosCarrito.forEach(item => { 
-            compraTotal += item.precio * item.cantidad
+           compraTotal += item.precio * item.cantidad
             mostrarModalBody(item)
            
             
         })
        
-       document.getElementById('precioFinal').innerHTML = `Precio total $${compraTotal}`
+      
+       document.getElementById('precioFinal').innerHTML = `Precio total $${new Intl.NumberFormat("es-CO").format(compraTotal)}`
     }else{
         modalBody.innerHTML += `<p>No hay productos en el carrito</p>`
     }
@@ -148,8 +145,7 @@ function calcularMonto(){
 
 /*Mostrar carga Productos */
 function mostrarModalBody(item){
-    const {id,nombre,marca,precio,stock,imagen,cantidad} = item 
-   //const {cantidad,id} = item 
+    const {id,nombre,marca,precio,stock,imagen,cantidad} = item  
      modalBody.innerHTML += `
     <div id ="card${id}" class="card mb-3" style="max-width: 540px;">
         <div class="row g-0">
@@ -164,9 +160,9 @@ function mostrarModalBody(item){
                  <p class="card-text">Precio: $${precio}</p>
                  <p class="card-text">Stock: ${stock}</p>
                  <p id="cant-producto${id}" class="card-text">Cantidad: ${cantidad}</p>
-                 <button value="${id}" data-id="btn-${id}" class="btn btn-outline-dark eliminar-producto">Eliminar</button>
-                 <button  value="${id}" class="btn btn-outline-dark eliminarUnProducto">Delete</button>
-                 <button dataId=${id} value="${id}" class="btn btn-outline-dark agregarModalProducto">Agregar</button>
+                 <button value="${id}" data-id="btn-${id}" class="btn btn-outline-dark eliminar-producto"><i class="fas fa-trash-alt">Eliminar</i></button>
+                 <button  value="${id}" class="btn btn-outline-dark eliminarUnProducto"><i class="fas fa-minus"></i></i></button>
+                 <button dataId=${id} value="${id}" class="btn btn-outline-dark agregarModalProducto"><i class="fas fa-plus"></i></button>
                </div>
              </div>
        </div>
@@ -175,17 +171,17 @@ function mostrarModalBody(item){
 
 document.querySelectorAll('.agregarModalProducto').forEach(btn => {
  btn.addEventListener('click',(e) => {
-     console.log(e.target.value)
-     agregarProductos(e.target.value)
+     console.log(btn.value)
+     agregarProductos(btn.value)
  })
 })
 
-//eliminarUnProducto()
+
 
 document.querySelectorAll('.eliminarUnProducto').forEach(btn =>{
     btn.addEventListener('click', (e) => {
          
-        eliminarUnProducto(e.target.value)
+        eliminarUnProducto(btn.value)
         
        
     })
@@ -215,8 +211,6 @@ function eliminarUnProducto(indice){
                }
             }  
             
-           
-           // calcularMonto()
 }
 
 /*Eliminar todo el producto*/
