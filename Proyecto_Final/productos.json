@@ -1,0 +1,97 @@
+[
+    {
+        "id":"1",
+        "nombre":"Queso Azul",
+        "marca": "Sancor",
+        "precio": 600,
+        "stock": 5,
+        "img": "quesoAzul.png"
+    },
+    {
+        "id":"2",
+        "nombre": "Lomo",
+        "marca": "Boccatti",
+        "precio": 3500,
+        "stock": 4,
+        "img": "lomo.jpg"
+    },
+    {
+        "id":"3",
+        "nombre": "Salame Milan",
+        "marca": "Cangnoli",
+        "precio": 570,
+        "stock": 15,
+        "img": "Salame.jpg"
+    },
+    {
+        "id":"4",
+        "nombre": "Salame Tipo Fuet",
+        "marca": "El Bierzo",
+        "precio": 800,
+        "stock": 3,
+        "img": "Salames Tipo Fuet.png"
+    },
+    {
+        "id":"5",
+        "nombre": "Queso Pategrás",
+        "marca": "La Paulina",
+        "precio": 1400,
+        "stock": 7,
+        "img": "quesoPentagran.jpg"
+    },
+    {
+        "id":"6",
+        "nombre": "Bondiola",
+        "marca": "El Berizo",
+        "precio": 400,
+        "stock": 2,
+        "img": "bondiola.png"
+    },
+    {
+        "id":"7",
+        "nombre": "Jamon Crudo",
+        "marca": "Campo Austral",
+        "precio": 6425,
+        "stock": 5,
+        "img": "jamon-crudo-austral.webp"
+    },
+    {
+        "id":"8",
+        "nombre": "Queso Atuel",
+        "marca": "Santa Rosa",
+        "precio": 2365,
+        "stock": 3,
+        "img": "queso-santa-rosa-atuel.webp"
+    },
+    {
+        "id":"9",
+        "nombre": "Jamon Cocido",
+        "marca": "Bocatti",
+        "precio": 2700,
+        "stock": 4,
+        "img": "jamon-cocido-bocatti.webp"
+    },
+    {
+        "id":"10",
+        "nombre": "Queso Goya",
+        "marca": "Migue",
+        "precio": 2499,
+        "stock": 2,
+        "img": "goya-queso.webp"
+    },
+    {
+        "id":"11",
+        "nombre": "Jamon Crudo Parma",
+        "marca": "El Bierzo",
+        "precio": 2900,
+        "stock": 3,
+        "img": "jamon-crudo-parma.png"
+    },{
+        "id":"12",
+        "nombre": "Jamon Cocido",
+        "marca": "El Bierzo",
+        "precio": 2800,
+        "stock": 2,
+        "img": "jamon-cosido-el-bierzo.png"
+    }
+]
