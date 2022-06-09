@@ -4,9 +4,8 @@ let productosCarrito = []
 let divProductos = document.getElementById('divProductos')
 let btnCarrito = document.getElementById('btnCarrito')
 let modalBody = document.getElementsByClassName('modal-body')[0]
-let modalCarrito = document.getElementById('modalCarrito')
 
-const DatosJson = async () => {
+const obtenerProductos = async () => {
     
     let datos = await fetch('./productos.json') 
 
@@ -26,8 +25,7 @@ const DatosJson = async () => {
     })})
 }
 
-
-
+/*Muestra cantidad de productos en el carrito*/
 function mostrarCantidadProductos(productosCarrito){
     return btnCarrito.innerHTML = `
     <i class="bi-cart-fill me-1"></i>
@@ -35,13 +33,13 @@ function mostrarCantidadProductos(productosCarrito){
      <span class="badge bg-dark text-white ms-1 rounded-pill">${productosCarrito.length}</span>`
 }
 
+/*Evento que muestra todos los productos*/
 document.addEventListener("DOMContentLoaded", function(){
-
     iniciarCarrito();
-    DatosJson()
-     
+    obtenerProductos() 
  });
 
+ /*Inicio carrito*/
 function iniciarCarrito(){
     if(localStorage.getItem('carrito')) {
         productosCarrito = JSON.parse(localStorage.getItem('carrito'))
@@ -51,24 +49,16 @@ function iniciarCarrito(){
     }
  }
 
+/*Agregar Productos Carrito*/
 function agregarProductos(ptr){
 const productosCart = JSON.parse(localStorage.getItem('carrito'))
-     
     let index = productosCart.findIndex(producto => producto.id == ptr );
-    console.log(index)
-            
-    console.log(ptr +"ptr")
     const nodo =productos.find(producto => producto.id == ptr)
-        console.log(nodo)
-        const {id,nombre,marca,precio,stock,imagen} = nodo
-            
+        const {id,nombre,marca,precio,stock,imagen} = nodo      
     if(index != -1 ){
                
         if(productosCart[index].cantidad < nodo.stock){
-            console.log(`CANTIDAD ARRAY STORAGE  ${productosCart[index].cantidad} `)
-            console.log(`STOCK ARRAY JSON  ${nodo.stock} `)
-
-             productosCart[index].cantidad++
+            productosCart[index].cantidad++
             localStorage.setItem('carrito', JSON.stringify(productosCart))
             const pcantidad=document.getElementById(`cant-producto${ptr}`)
             if(pcantidad){
@@ -78,91 +68,40 @@ const productosCart = JSON.parse(localStorage.getItem('carrito'))
         }
              
     } 
-    else {
-       
+    else { 
         let vipd ={id:id,nombre:nombre,marca:marca,precio:precio,
                     stock:stock,imagen:imagen,cantidad:1 } 
-                
-        console.log(vipd.nombre)
         productosCart.push(vipd)
         localStorage.setItem('carrito',JSON.stringify(productosCart))
-        console.log(`Producto localStorage ${productosCart.length}`)
-        console.log( JSON.parse(localStorage.getItem('carrito')));
                 
     }
     mostrarCantidadProductos(productosCart)
  }
 
- /*Eliminar Carrito*/
+ /*Eliminar todos los productos del Carrito*/
 function eliminarProducto(indice)
 {
     const productosDelStorage = JSON.parse(localStorage.getItem('carrito'))
-    //const indice = e.target.parentNode.getAttribute('value')
-    console.log(indice)
-let index = productosDelStorage.findIndex(producto => producto.id == indice );   
+    let index = productosDelStorage.findIndex(producto => producto.id == indice );   
           
-           console.log(`eliminar todo==Carrito Indice==${indice}`)
-          // document.getElementById(`card${indice}`).remove()
-          let nodo=document.getElementById(`card${indice}`)
-          while (nodo.firstChild) {
-            nodo.removeChild(nodo.firstChild);
-            }
-           productosDelStorage.splice(index,1)
-           localStorage.setItem('carrito',JSON.stringify(productosDelStorage))
-           calcularMonto()
-           mostrarCantidadProductos(productosDelStorage)
-           if (productosDelStorage.length==0){
-            modalBody.innerHTML= ""
-           }
+    let nodo=document.getElementById(`card${indice}`)
+     while (nodo.firstChild) {
+       nodo.removeChild(nodo.firstChild);
+     }
+    productosDelStorage.splice(index,1)
+    localStorage.setItem('carrito',JSON.stringify(productosDelStorage))
+    calcularMonto()
+    mostrarCantidadProductos(productosDelStorage)
+          
 }
 
-/*
-    modalCarrito.addEventListener('click', (e) => {
-
-        const productosDelStorage = JSON.parse(localStorage.getItem('carrito'))
-        const indice = e.target.parentNode.getAttribute('value')
-        console.log(indice)
-    let index = productosDelStorage.findIndex(producto => producto.id == indice );   
-              
-               console.log(`eliminar todo==Carrito Indice==${indice}`)
-              // document.getElementById(`card${indice}`).remove()
-              let nodo=document.getElementById(`card${indice}`)
-              while (nodo.firstChild) {
-                nodo.removeChild(nodo.firstChild);
-                }
-               productosDelStorage.splice(index,1)
-               localStorage.setItem('carrito',JSON.stringify(productosDelStorage))
-               calcularMonto()
-               mostrarCantidadProductos(productosDelStorage)
-               if (productosDelStorage.length==0){
-                modalBody.innerHTML= ""
-               }
-        /*
-         let total=calcularMonto()
-         const productosCarrito = JSON.parse(localStorage.getItem('carrito'))
-         const btnId = e.target.getAttribute('data-id')
-         if(btnId !== null){
-             const btnValue = e.target.value
-             document.getElementById(`card${btnValue}`).remove()
-             let productoCarrito = productosCarrito.find(producto => producto.id == e.target.value );
-             total -=productoCarrito.precio * productoCarrito.cantidad
-             let indexCarrito = productosCarrito.findIndex(producto => producto.id == e.target.value )
-             productosCarrito.splice(indexCarrito,1)
-             localStorage.setItem('carrito',JSON.stringify(productosCarrito))
-             productosCarrito.forEach(producto => console.log(producto))
-             document.getElementById('precioFinal').innerHTML = `Precio total $${total}`
-             mostrarCantidadProductos(productosCarrito)
-         }
-       
-     })
-
- */
-
+/*Actualiza cantidad carrito*/
 function actualizarCantidadCarrito(pcantidad,cantidad){
     pcantidad.innerText =`Cantidad: ${cantidad}`
-calcularMonto()
+    calcularMonto()
 } 
 
+ /*Calcula Monto de la Compra*/
 function calcularMonto(){
     productosCarrito = JSON.parse(localStorage.getItem('carrito'));
     modalBody.innerHTML = ""
@@ -171,20 +110,24 @@ function calcularMonto(){
      {
         productosCarrito.forEach(item => { 
            compraTotal += item.precio * item.cantidad
-            mostrarModalBody(item)
-           
-            
+            mostrarModalBody(item)   
         })
        
-      
        document.getElementById('precioFinal').innerHTML = `Precio total $${new Intl.NumberFormat("es-CO").format(compraTotal)}`
     }else{
-        modalBody.innerHTML += `<p>No hay productos en el carrito</p>`
+        modalBody.innerHTML= ""
+                document.getElementById('precioFinal').innerHTML = ""
+                modalBody.innerHTML += `<h4>Tu Pedido</h4>
+                                        <p>No hay productos en el carrito</p>`
+                document.getElementById('finalizarCompra').style.visibility = "hidden";
+                document.getElementById('cerrar').style.visibility = "hidden";
+                document.getElementById('iniciarCompra').style.visibility = "visible";
+                
     }
    return compraTotal
 }    
 
-/*Mostrar carga Productos */
+/*Mostrar carga Productos a Comprar en el carrito */
 function mostrarModalBody(item){
     const {id,nombre,marca,precio,stock,imagen,cantidad} = item  
      modalBody.innerHTML += `
@@ -209,35 +152,30 @@ function mostrarModalBody(item){
        </div>
     </div>
 `
-
+/*Agregar un producto en el carrito*/
 document.querySelectorAll('.agregarModalProducto').forEach(btn => {
  btn.addEventListener('click',(e) => {
-     console.log(btn.value)
      agregarProductos(btn.value)
  })
 })
 
-
-
+/*Evento eliminar un producto*/
 document.querySelectorAll('.eliminarUnProducto').forEach(btn =>{
-    btn.addEventListener('click', (e) => {
-         
+    btn.addEventListener('click', (e) => { 
         eliminarUnProducto(btn.value)
-        
-       
     })
 })
 
+/*Evento eliminar todos los productos*/
 document.querySelectorAll('.eliminar-producto').forEach(btn =>{
     btn.addEventListener('click', (e) => {
-         
         eliminarProducto(btn.value)
-        
-       
     })
 })
+
 }
 
+/*Elimina un producto en el carrito*/
 function eliminarUnProducto(indice){
     const productosDelStorage = JSON.parse(localStorage.getItem('carrito'))
     let index = productosDelStorage.findIndex(producto => producto.id == indice );   
@@ -249,31 +187,30 @@ function eliminarUnProducto(indice){
             }   
             
             if(productosDelStorage[index].cantidad==0){
-               console.log(`Cantidad== ${productosDelStorage[index].cantidad}`)
                document.getElementById(`card${indice}`).remove()
                productosDelStorage.splice(index,1)
                localStorage.setItem('carrito',JSON.stringify(productosDelStorage))
                calcularMonto()
                mostrarCantidadProductos(productosDelStorage)
-               if (productosDelStorage.length==0){
-                modalBody.innerHTML= ""
-               }
+              
             }  
             
 }
 
-/*Eliminar todo el producto*/
+/*Evento boton carrito*/
 btnCarrito.addEventListener('click', () => { 
+    document.getElementById('finalizarCompra').style.visibility = "visible";
+    document.getElementById('cerrar').style.visibility = "visible";
+    document.getElementById('iniciarCompra').style.visibility = "hidden";
     calcularMonto()
-   
-   // eliminarCarrito()
-
 })
 
+/*Evento finalización de la compra*/ 
 document.getElementById('finalizarCompra').addEventListener('click', (e) => {
     Swal.fire({
         icon: 'question',
         title: '¿Desea confirmar su compra?',
+        text: `Precio total $${new Intl.NumberFormat("es-CO").format(calcularMonto())}`,
         showCancelButton: true,
         confirmButtonColor: '#3085d6'
       }).then((result)=>{
